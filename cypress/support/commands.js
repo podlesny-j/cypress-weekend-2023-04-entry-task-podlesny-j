@@ -4,3 +4,7 @@ Cypress.Commands.add("suppressCookieAndSubscriptionDialogs", () => {
   })
   cy.setCookie("__kwc_agreed", "false")
 })
+
+Cypress.Commands.add("getDataTest", (selector) => {
+  return cy.get(`[data-test=${selector}]`)
+})
