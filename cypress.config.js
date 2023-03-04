@@ -6,5 +6,7 @@ module.exports = defineConfig({
       // implement node event listeners here
     },
     baseUrl: "https://www.kiwi.com",
+    viewportWidth: 1280,
+    viewportHeight: 800,
   },
 })
