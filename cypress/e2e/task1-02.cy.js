@@ -1,40 +1,37 @@
 describe("Task 1 parts 5-8", () => {
   beforeEach(() => {
     cy.suppressCookieAndSubscriptionDialogs()
+  })
+
+  it("Click the first Picture Card in 'Popular destinations' section and verify the URL after re-direct", () => {
     cy.visit("/en/airport/bcn/barcelona-el-prat-barcelona-spain/")
-  })
 
-  it("V sekcii “ Popular destinations from Barcelona–El Prat (BCN)” klikni na prvú picture card. Skontroluj, že si bol/a presmerovaný/á na stránku search/results so správne vyplneným search form.", () => {
-    cy.getDataTest("TrendingDestinations").within(() => {
-      cy.get("h2").should(
-        "contain.text",
-        "Popular destinations from Barcelona–El Prat (BCN)"
-      )
-      cy.getDataTest("PictureCard").first().click()
-    })
+    cy.step("Click the first picture card")
+    cy.getDataTest("TrendingDestinations")
+      .find("[data-test='PictureCard']")
+      .first()
+      .click()
 
-    cy.get(".bOFZIR", { timeout: 10000 }).should("not.exist")
-
-    cy.location("pathname").should("match", /\/search\/results\//)
-  })
-
-  it.only("Skontroluj, že si bol/a presmerovaný/á na stránku search/results so správne vyplneným search form", () => {
-    cy.step(
-      "Section 'Popular destinations' should contain picture cards of the destination"
+    cy.step("Check the pathname pattern after re-direct")
+    cy.location("pathname", { timeout: 10_000 }).should(
+      "match",
+      /\/search\/results\//
     )
-    cy.getDataTest("TrendingDestinations").within(() => {
-      cy.get("h2").should(
-        "contain.text",
-        "Popular destinations from Barcelona–El Prat (BCN)"
-      )
-      cy.getDataTest("PictureCard").first().click()
-    })
+  })
 
-    cy.step("Wait until the loading element no longer exists")
-    cy.get(".bOFZIR", { timeout: 10000 }).should("not.exist")
+  it("Check the search form is correctly pre-filled with origin and destination", () => {
+    cy.visit("/en/airport/bcn/barcelona-el-prat-barcelona-spain/")
 
-    cy.step("Verify URL after re-direct")
-    cy.location("pathname").should("match", /\/search\/results\//)
+    cy.step("Setup application state")
+    cy.getDataTest("TrendingDestinations")
+      .find("[data-test='PictureCard']")
+      .first()
+      .click()
+
+    cy.location("pathname", { timeout: 10_000 }).should(
+      "match",
+      /\/search\/results\//
+    )
 
     cy.step("Check pre-filled value of origin")
     cy.getDataTest("PlacePickerInput-origin")
@@ -49,6 +46,19 @@ describe("Task 1 parts 5-8", () => {
       .children()
       .first()
       .should("contain.text", "Ibiza")
+  })
+
+  it("Add one cabin bag and verify the results price changed", () => {
+    cy.step("Arrange Application state")
+    cy.intercept("POST", "https://api.skypicker.com/umbrella/v2/graphql*").as(
+      "getRates"
+    )
+    cy.visit("/search/results/barcelona-spain/ibiza-spain/")
+    cy.wait("@getRates")
+    cy.step("Wait for results list so that test can continue")
+    cy.getDataTest("ResultList-results", { timeout: 15_000 })
+      .should("exist")
+      .and("be.visible")
 
     cy.step("Save current price with no baggage")
     cy.get('strong[data-test="ResultCardPrice"]')
@@ -58,11 +68,9 @@ describe("Task 1 parts 5-8", () => {
       .as("originalPrice")
 
     cy.step("Add one Cabin bagage")
-    cy.intercept("POST", "https://api.skypicker.com/umbrella/v2/graphql*").as(
-      "getRates"
-    )
     cy.getDataTest("BagsPopup-cabin")
-      .should("be.visible")
+      .should("have.length", 1)
+      .and("be.visible")
       .within(() => {
         cy.get('button[aria-label="increment"]').click()
       })

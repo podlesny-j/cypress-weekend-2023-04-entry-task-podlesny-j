@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "cy:run": "npx cypress run --e2e --browser chrome",
+    "cy:run": "npx cypress run --browser firefox",
     "cy:open": "npx cypress open --e2e --browser chrome"
   },
   "dependencies": {
