@@ -28,10 +28,6 @@ describe("Task 1 parts 9-11", () => {
       .and("be.visible")
   }
 
-  beforeEach(() => {
-    cy.suppressCookieAndSubscriptionDialogs()
-  })
-
   it("Proceed to Booking form, verify user is on the correct page ", () => {
     setupApplicationState()
     cy.step("Select the first result")

@@ -1,6 +1,5 @@
 describe("Task 1 parts 1-4", () => {
   beforeEach(() => {
-    cy.suppressCookieAndSubscriptionDialogs()
     cy.visit("/en/airport/bcn/barcelona-el-prat-barcelona-spain/")
   })
 

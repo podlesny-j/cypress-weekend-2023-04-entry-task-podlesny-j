@@ -1,8 +1,4 @@
 describe("Task 1 parts 5-8", () => {
-  beforeEach(() => {
-    cy.suppressCookieAndSubscriptionDialogs()
-  })
-
   it("Click the first Picture Card in 'Popular destinations' section and verify the URL after re-direct", () => {
     cy.visit("/en/airport/bcn/barcelona-el-prat-barcelona-spain/")
 
