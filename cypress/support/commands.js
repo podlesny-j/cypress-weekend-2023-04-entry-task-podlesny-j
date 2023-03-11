@@ -10,17 +10,30 @@ Cypress.Commands.add("getDataTest", (selector, ...args) => {
 })
 
 
+Cypress.Commands.add("getFirstPictureCard", () => {
+  cy.step("Get first picture card in the TrendingDestinations section")
+  cy.getDataTest("TrendingDestinations")
+    .find("[data-test='PictureCard']")
+    .first()
+    .as("firstPictureCard")
+    .scrollIntoView({ offset: { top: 100 } })
+})
+
 Cypress.Commands.add("getRandomPictureCard", () => {
+  cy.step("Get total number of the picture cards on page")
   cy.getDataTest("TrendingDestinations")
     .find("[data-test='PictureCard']")
     .its("length")
     .as("numberOfCards")
 
-  cy.step("Choose one picture card at random")
+  cy.step("Choose one of the picture cards at random")
   cy.then(function () {
     expect(this.numberOfCards).to.be.gte(1)
     const randomIndex = Math.floor(Math.random() * this.numberOfCards)
     cy.log("Randomly chose to click Card number " + (randomIndex + 1))
-    cy.getDataTest("PictureCard").eq(randomIndex).as("randomPictureCard")
+    cy.getDataTest("PictureCard")
+      .eq(randomIndex)
+      .as("randomPictureCard")
+      .scrollIntoView({ offset: { top: 100 } })
   })
 })

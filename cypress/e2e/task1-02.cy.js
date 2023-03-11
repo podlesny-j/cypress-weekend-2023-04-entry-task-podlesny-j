@@ -3,10 +3,7 @@ describe("Task 1 parts 5-8", () => {
     cy.visit("/en/airport/bcn/barcelona-el-prat-barcelona-spain/")
 
     cy.step("Click the first picture card")
-    cy.getDataTest("TrendingDestinations")
-      .find("[data-test='PictureCard']")
-      .first()
-      .click()
+    cy.getFirstPictureCard().click()
 
     cy.step("Check the pathname pattern after re-direct")
     cy.location("pathname", { timeout: 10_000 }).should(
@@ -19,10 +16,7 @@ describe("Task 1 parts 5-8", () => {
     cy.visit("/en/airport/bcn/barcelona-el-prat-barcelona-spain/")
 
     cy.step("Setup application state")
-    cy.getDataTest("TrendingDestinations")
-      .find("[data-test='PictureCard']")
-      .first()
-      .click()
+    cy.getFirstPictureCard().click()
 
     cy.location("pathname", { timeout: 10_000 }).should(
       "match",
