@@ -16,7 +16,8 @@ Cypress.Commands.add("getFirstPictureCard", () => {
     .find("[data-test='PictureCard']")
     .first()
     .as("firstPictureCard")
-    .scrollIntoView({ offset: { top: 100 } })
+    .scrollIntoView()
+    .should("be.visible")
 })
 
 Cypress.Commands.add("getRandomPictureCard", () => {
@@ -34,6 +35,7 @@ Cypress.Commands.add("getRandomPictureCard", () => {
     cy.getDataTest("PictureCard")
       .eq(randomIndex)
       .as("randomPictureCard")
-      .scrollIntoView({ offset: { top: 100 } })
+      .scrollIntoView()
+      .should("be.visible")
   })
 })
