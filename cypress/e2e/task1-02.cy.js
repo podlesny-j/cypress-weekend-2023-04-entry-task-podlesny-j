@@ -1,10 +1,13 @@
 describe("Task 1 parts 5-8", () => {
   it("Click the first Picture Card in 'Popular destinations' section and verify the URL after re-direct", () => {
+    cy.section("Arrange")
     cy.visit("/en/airport/bcn/barcelona-el-prat-barcelona-spain/")
 
+    cy.section("Act")
     cy.step("Click the first picture card")
     cy.getFirstPictureCard().click()
 
+    cy.section("Assert")
     cy.step("Check the pathname pattern after re-direct")
     cy.location("pathname", { timeout: 10_000 }).should(
       "match",
@@ -13,16 +16,15 @@ describe("Task 1 parts 5-8", () => {
   })
 
   it("Check the search form is correctly pre-filled with origin and destination", () => {
+    cy.section("Arrange")
     cy.visit("/en/airport/bcn/barcelona-el-prat-barcelona-spain/")
-
-    cy.step("Setup application state")
     cy.getFirstPictureCard().click()
-
     cy.location("pathname", { timeout: 10_000 }).should(
       "match",
       /\/search\/results\//
     )
 
+    cy.section("Assert")
     cy.step("Check pre-filled value of origin")
     cy.getDataTest("PlacePickerInput-origin")
       .should("be.visible")
@@ -39,7 +41,7 @@ describe("Task 1 parts 5-8", () => {
   })
 
   it("Add one cabin bag and verify the results price changed", () => {
-    cy.step("Arrange Application state")
+    cy.section("Arrange")
     cy.intercept("POST", "https://api.skypicker.com/umbrella/v2/graphql*").as(
       "getRates"
     )
@@ -50,6 +52,7 @@ describe("Task 1 parts 5-8", () => {
       .should("exist")
       .and("be.visible")
 
+    cy.section("Act")
     cy.step("Save current price with no baggage")
     cy.get('strong[data-test="ResultCardPrice"]')
       .eq(0)
@@ -66,6 +69,7 @@ describe("Task 1 parts 5-8", () => {
       })
     cy.wait("@getRates")
 
+    cy.section("Assert")
     cy.step(
       "Verify new results have been fetched and the displayed price has been updated"
     )

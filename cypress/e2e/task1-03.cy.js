@@ -1,12 +1,15 @@
-describe("Task 1 parts 9-11", () => {
-  function setupApplicationState() {
-    cy.step("Arrange Application state")
+describe("Task 1 parts 9-10", () => {
+  beforeEach(() => {
     cy.intercept("POST", "https://api.skypicker.com/umbrella/v2/graphql*").as(
       "getRates"
     )
+  })
+
+  it("Proceed to Booking form, verify user is on the correct page ", () => {
+    cy.section("Arrange")
     cy.visit("/search/results/barcelona-spain/ibiza-spain/")
-    cy.wait("@getRates")
     cy.step("Wait for results list so that test can continue")
+    cy.wait("@getRates")
     cy.getDataTest("ResultList-results", { timeout: 15_000 })
       .should("exist")
       .and("be.visible")
@@ -23,13 +26,7 @@ describe("Task 1 parts 9-11", () => {
       .first()
       .should("contain.text", "Ibiza")
 
-    cy.getDataTest("ResultList-results", { timeout: 15_000 })
-      .should("exist")
-      .and("be.visible")
-  }
-
-  it("Proceed to Booking form, verify user is on the correct page ", () => {
-    setupApplicationState()
+    cy.section("Act")
     cy.step("Select the first result")
     cy.getDataTest("ResultCardWrapper")
       .first()
@@ -44,7 +41,8 @@ describe("Task 1 parts 9-11", () => {
         cy.contains("Continue as a guest").click()
       })
 
-    cy.step("Verify new URL by spattern")
+    cy.section("Assert")
+    cy.step("Verify new URL by pattern")
     cy.location("pathname", { timeout: 15_000 }).should("match", /\/*\/booking/)
 
     cy.step("Check the key elements on the page are rendered")
