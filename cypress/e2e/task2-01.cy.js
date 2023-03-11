@@ -46,15 +46,31 @@ bol zavolaný API call, kde boli správne aplikované filtre a dostali sme nejak
     cy.wait("@redirect").its("response.statusCode").should("eq", 200)
     cy.location("pathname").should("match", /\/search\/results\//)
   })
-  // Cypress._.times(10, () => {
-  // })
+
   it.only("Check re-direct URL matches the value of href attribute of the Picture Card", () => {
+    cy.visit("/en/airport/bcn/barcelona-el-prat-barcelona-spain/")
+
     cy.getDataTest("TrendingDestinations")
       .find("[data-test='PictureCard']")
       .first()
-      .invoke("attr", "href")
-      .as("hrefAttrValue")
+      .as("pictureCardToClick")
+      .invoke("prop", "href")
+      .as("hrefPropValue")
+
+    cy.intercept("GET", "**/search/results/**").as("redirect")
+
+    cy.get("@pictureCardToClick").click()
+    cy.wait("@redirect").its("response.statusCode").should("eq", 200)
+
+    cy.url().then(function (url) {
+      cy.log(url)
+      cy.log(this.hrefPropValue)
+
+      expect(url).to.be.equal(this.hrefPropValue)
+    })
   })
+  //   Cypress._.times(10, () => {
+  // })
 
   it("Check API call has correct filters applied and response it sent back to client from server", () => {})
 })
