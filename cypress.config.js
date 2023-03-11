@@ -9,5 +9,8 @@ module.exports = defineConfig({
     viewportWidth: 1280,
     viewportHeight: 800,
     experimentalRunAllSpecs: true,
+    env: {
+      hideXhr: true,
+    },
   },
 })
